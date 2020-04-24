@@ -12,13 +12,14 @@ względem kroku i wielkości porcji danych.
 import met, helper
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 from sklearn.linear_model import LinearRegression
 
 np.set_printoptions(precision=3)
 
 # Define processing parameters
-chunk_sizes = [100, 500, 1000]  # number of training instances
-steps = [100, 500, 1000]  # prediction time horizon in instances
+chunk_sizes = [10, 100, 200, 300, 500, 1000]  # number of training instances
+steps = [10, 100, 200, 300, 500, 1000]  # prediction time horizon in instances
 methods = {"PCALR": met.PCALR(), "LR": LinearRegression()}
 
 # Read data
@@ -29,8 +30,8 @@ y = data[:, -1]
 # Experimental loop
 scores = np.zeros((len(chunk_sizes), len(steps), len(methods)))
 
-for i, chunk_size in enumerate(chunk_sizes):
-    for j, step in enumerate(steps):
+for i, chunk_size in enumerate(tqdm(chunk_sizes)):
+    for j, step in enumerate(tqdm(steps)):
         results = helper.test(chunk_size, step, X, y, methods)
         scores[i, j] = results
 
